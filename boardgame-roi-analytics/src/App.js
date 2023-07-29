@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
 import Collections from "./pages/Collections";
 import Analytics from "./pages/Analytics";
+import gamesArr from "./gameCollection";
 
 // Import styles
 import "./App.css";
@@ -17,7 +18,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/collections" element={<Collections />} />
+          <Route path="/collections" element={<Collections allGames={gamesArr} />} />
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </div>
