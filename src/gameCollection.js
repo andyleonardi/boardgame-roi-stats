@@ -1,6 +1,6 @@
 const games = [
     {
-        name: "5-minute Dungeon",
+        name: "5-Minute Dungeon",
         status: "Previously Owned",
         buydate: "2018-02-24",
         buyprice: 26.108947,
