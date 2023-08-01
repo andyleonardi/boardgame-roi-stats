@@ -43,7 +43,9 @@ const extractRelevantData = (obj) => {
 function App() {
   const [bggUserId, setBggUserId] = useState("andyleonardi");
   const [userBGGData, setUserBGGData] = useState([]);
+  const [userCollectionData, setUserCollectionData] = useState([]);
   const [requireInputs, setRequireInputs] = useState([]);
+  const [noInputsRequired, setNoInputsRequired] = useState([]);
   /*
   // Try to mount API first, but for working version only pull API data when user submit form
   useEffect(() => {
@@ -120,7 +122,7 @@ function App() {
     let newRecords = testBggArr.filter(
       ({ name: record1 }) =>
         !testAppArr.some(({ name: record2 }) => record2 === record1)
-    );
+    ).map(({gameID, ...item}) => item);
     newRecords.forEach((element) => {
       element.buydate = null;
       element.buyprice = null;
@@ -142,6 +144,9 @@ function App() {
     // console.log(updateRecords);
 
     let inputRequiredRecords = newRecords.concat(updateRecords);
+    inputRequiredRecords.forEach((element, index) => {
+      element.id = index;
+    })
     // console.log(inputRequiredRecords);
 
     // The above 2 arrays will contain everything that has changed between syncs
@@ -151,8 +156,17 @@ function App() {
     // Then open / Link to Forms component where it takes the combined array
     // and get user to input forms
     
-    console.log(inputRequiredRecords);
+    // console.log(inputRequiredRecords);
     setRequireInputs(inputRequiredRecords);
+
+    // Set state of another list where no inputs are required
+    let staticRecords = testAppArr.filter(
+      ({ name: record1 }) =>
+        !inputRequiredRecords.some(({ name: record2 }) => record2 === record1)
+    )
+    // console.log(staticRecords);
+
+    setNoInputsRequired(staticRecords);
 
     // This will update the values in our app data array
     // Then, run through new data array.
@@ -161,6 +175,23 @@ function App() {
 
     // Finally, Link to Forms component where we will have these new records
     // and allow user to input values to them
+  };
+
+  const updateDataFromInputs = (updatedData) => {
+    let newData = noInputsRequired.concat(updatedData);
+    newData.sort((a, b) => {
+      const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    setUserCollectionData(newData);
+    // console.log("updated data: ", userCollectionData);
   };
 
   return (
@@ -178,7 +209,7 @@ function App() {
               />
             }
           />
-          <Route path="/form" element={<Forms objArr={requireInputs} />} />
+          <Route path="/form" element={<Forms objArr={requireInputs} updateDataFromInputs={updateDataFromInputs} />} />
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </div>
