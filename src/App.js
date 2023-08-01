@@ -9,9 +9,9 @@ import Homepage from "./pages/Homepage";
 import Collections from "./pages/Collections";
 import Analytics from "./pages/Analytics";
 import Forms from "./pages/Forms";
-import gamesArr from "./gameCollection";
+// import gamesArr from "./gameCollection";
 
-import testAppArr from "./testAppData";
+import gamesArr from "./testAppData"; // TESTING SMALL SAMPLE (HARDCODED)
 import testBggArr from "./testAPIData";
 
 // Import styles
@@ -42,7 +42,8 @@ const extractRelevantData = (obj) => {
 
 function App() {
   const [bggUserId, setBggUserId] = useState("andyleonardi");
-  const [userBGGData, setUserBGGData] = useState([]);
+  // const [userBGGData, setUserBGGData] = useState([]);
+  const [userBGGData, setUserBGGData] = useState(testBggArr); // TESTING SMALL SAMPLE SET (HARDCODED)
   const [userCollectionData, setUserCollectionData] = useState([]);
   const [requireInputs, setRequireInputs] = useState([]);
   const [noInputsRequired, setNoInputsRequired] = useState([]);
@@ -107,8 +108,8 @@ function App() {
 
   const handleSyncButton = () => {
     console.log("Sync button pressed");
-    // test arrays testAppArr & testBggArr
-    console.log("Test app saved data: ", testAppArr);
+    // test arrays gamesArr & testBggArr
+    console.log("Test app saved data: ", gamesArr);
     console.log("Test API data: ", testBggArr);
 
     // This function will need to do the following:
@@ -121,7 +122,7 @@ function App() {
     //          app data should have been synced to the last userBGGData
     let newRecords = testBggArr.filter(
       ({ name: record1 }) =>
-        !testAppArr.some(({ name: record2 }) => record2 === record1)
+        !gamesArr.some(({ name: record2 }) => record2 === record1)
     ).map(({gameID, ...item}) => item);
     newRecords.forEach((element) => {
       element.buydate = null;
@@ -135,7 +136,7 @@ function App() {
     //    [OLD] in app's data with the data from userBGGData
     // 2. Get all matching name, but different status, i.e. we want to get 
     //    games that were sold between syncs (bgg status = prevowned & app status = own)
-    let updateRecords = testAppArr.filter(({ name: record1, status: stat1 }) =>
+    let updateRecords = gamesArr.filter(({ name: record1, status: stat1 }) =>
       testBggArr.some(({ name: record2, status: stat2 }) => record2 === record1 & stat1 !== stat2 & stat2 === "Previously Owned")
     );
     updateRecords.forEach((element) => {
@@ -160,7 +161,7 @@ function App() {
     setRequireInputs(inputRequiredRecords);
 
     // Set state of another list where no inputs are required
-    let staticRecords = testAppArr.filter(
+    let staticRecords = gamesArr.filter(
       ({ name: record1 }) =>
         !inputRequiredRecords.some(({ name: record2 }) => record2 === record1)
     )

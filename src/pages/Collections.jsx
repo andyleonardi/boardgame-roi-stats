@@ -9,7 +9,7 @@ const Collections = (props) => {
         <td>{e.buydate}</td>
         <td>${e.buyprice.toFixed(2)}</td>
         <td>{e.selldate}</td>
-        <td>{e.selldate !== "" && "$" + e.sellprice.toFixed(2)}</td>
+        <td>{e.selldate !== null && "$" + e.sellprice.toFixed(2)}</td>
         <td>{e.playcount}</td>
         <td>
           {e.playcount > 0 &&
