@@ -8,7 +8,7 @@ import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
 import Collections from "./pages/Collections";
 import Analytics from "./pages/Analytics";
-import Forms from "./pages/Forms";
+import Forms from "./Forms/Forms";
 // import gamesArr from "./gameCollection";
 
 import gamesArr from "./testAppData"; // TESTING SMALL SAMPLE (HARDCODED)
@@ -44,7 +44,7 @@ function App() {
   const [bggUserId, setBggUserId] = useState("andyleonardi");
   // const [userBGGData, setUserBGGData] = useState([]);
   const [userBGGData, setUserBGGData] = useState(testBggArr); // TESTING SMALL SAMPLE SET (HARDCODED)
-  const [userCollectionData, setUserCollectionData] = useState([]);
+  const [userCollectionData, setUserCollectionData] = useState(gamesArr);
   const [requireInputs, setRequireInputs] = useState([]);
   const [noInputsRequired, setNoInputsRequired] = useState([]);
   /*
@@ -120,10 +120,12 @@ function App() {
     //    NOTE: when we compare, we are only interested in getting records in
     //          userBGGData, and not the other way because theoretically,
     //          app data should have been synced to the last userBGGData
-    let newRecords = testBggArr.filter(
-      ({ name: record1 }) =>
-        !gamesArr.some(({ name: record2 }) => record2 === record1)
-    ).map(({gameID, ...item}) => item);
+    let newRecords = userBGGData
+      .filter(
+        ({ name: record1 }) =>
+          !userCollectionData.some(({ name: record2 }) => record2 === record1)
+      )
+      .map(({ gameID, ...item }) => item);
     newRecords.forEach((element) => {
       element.buydate = null;
       element.buyprice = null;
@@ -134,20 +136,26 @@ function App() {
 
     // 2. [OLD] For all matching records (name), update both status & playcount
     //    [OLD] in app's data with the data from userBGGData
-    // 2. Get all matching name, but different status, i.e. we want to get 
+    // 2. Get all matching name, but different status, i.e. we want to get
     //    games that were sold between syncs (bgg status = prevowned & app status = own)
-    let updateRecords = gamesArr.filter(({ name: record1, status: stat1 }) =>
-      testBggArr.some(({ name: record2, status: stat2 }) => record2 === record1 & stat1 !== stat2 & stat2 === "Previously Owned")
+    let updateRecords = userCollectionData.filter(
+      ({ name: record1, status: stat1 }) =>
+        userBGGData.some(
+          ({ name: record2, status: stat2 }) =>
+            (record2 === record1) &
+            (stat1 !== stat2) &
+            (stat2 === "Previously Owned")
+        )
     );
     updateRecords.forEach((element) => {
       element.status = "Previously Owned";
-    })
+    });
     // console.log(updateRecords);
 
     let inputRequiredRecords = newRecords.concat(updateRecords);
     inputRequiredRecords.forEach((element, index) => {
       element.id = index;
-    })
+    });
     // console.log(inputRequiredRecords);
 
     // The above 2 arrays will contain everything that has changed between syncs
@@ -156,15 +164,15 @@ function App() {
 
     // Then open / Link to Forms component where it takes the combined array
     // and get user to input forms
-    
+
     // console.log(inputRequiredRecords);
     setRequireInputs(inputRequiredRecords);
 
     // Set state of another list where no inputs are required
-    let staticRecords = gamesArr.filter(
+    let staticRecords = userCollectionData.filter(
       ({ name: record1 }) =>
         !inputRequiredRecords.some(({ name: record2 }) => record2 === record1)
-    )
+    );
     // console.log(staticRecords);
 
     setNoInputsRequired(staticRecords);
@@ -176,6 +184,15 @@ function App() {
 
     // Finally, Link to Forms component where we will have these new records
     // and allow user to input values to them
+  };
+
+  // Function to join back with BGG data on playcount & gameID
+  const createUpdatedCollection = (newDataFromCompletedForm, bggData) => {
+    let joinedData = newDataFromCompletedForm.map(({playcount, ...newData}) => ({
+      ...bggData.find((bgg) => bgg.name === newData.name && bgg),
+      ...newData,
+    }));
+    return joinedData;
   };
 
   const updateDataFromInputs = (updatedData) => {
@@ -191,13 +208,12 @@ function App() {
       }
       return 0;
     });
-    setUserCollectionData(newData);
-    // console.log("updated data: ", userCollectionData);
+    setUserCollectionData(createUpdatedCollection(newData, userBGGData));
+    console.log("updated data: ", userCollectionData);
   };
 
   return (
     <div className="App">
-      
       <div className="container">
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -205,12 +221,20 @@ function App() {
             path="/collections"
             element={
               <Collections
-                allGames={gamesArr}
+                allGames={userCollectionData}
                 handleSyncButton={handleSyncButton}
               />
             }
           />
-          <Route path="/form" element={<Forms objArr={requireInputs} updateDataFromInputs={updateDataFromInputs} />} />
+          <Route
+            path="/form"
+            element={
+              <Forms
+                objArr={requireInputs}
+                updateDataFromInputs={updateDataFromInputs}
+              />
+            }
+          />
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </div>
