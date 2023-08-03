@@ -47,6 +47,7 @@ function App() {
   const [userCollectionData, setUserCollectionData] = useState(gamesArr);
   const [requireInputs, setRequireInputs] = useState([]);
   const [noInputsRequired, setNoInputsRequired] = useState([]);
+  const [dmgPerPlay, setDmgPerPlay] = useState(null);
   /*
   // Try to mount API first, but for working version only pull API data when user submit form
   useEffect(() => {
@@ -212,11 +213,15 @@ function App() {
     console.log("updated data: ", userCollectionData);
   };
 
+  const populateHomePage = (dmg) => {
+    setDmgPerPlay(dmg);
+  }
+
   return (
     <div className="App">
       <div className="container">
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Homepage dmgplay={dmgPerPlay} />} />
           <Route
             path="/collections"
             element={
@@ -235,7 +240,7 @@ function App() {
               />
             }
           />
-          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/analytics" element={<Analytics allGames={userCollectionData} populateHomePage={populateHomePage} />} />
         </Routes>
       </div>
     </div>
