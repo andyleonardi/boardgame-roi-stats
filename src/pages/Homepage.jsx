@@ -1,42 +1,22 @@
 import Header from "../components/Header";
+import roiMeter from "../functions/roiFunctions";
+import cardFunctions from "../functions/cardFunctions";
+import funMeter from "../components/funMeter";
 
 const Homepage = (props) => {
-  const roiMeter = (cost) => {
-    if (cost === null) {
-      return <>Please upload your collection</>;
-    }
-    if (cost <= 0) {
-      return <>!!! IMPOSSIBRU?!? !!!</>;
-    }
-    if (cost <= 5) {
-      return <>Skip a cup of joe</>;
-    }
-    if (cost <= 10) {
-      return (
-        <>
-          Wow, it <b>IS</b> cheaper than going to the cinema!
-        </>
-      );
-    }
-    if (cost <= 15) {
-      return <>Fine! It's either this or the cinema</>;
-    }
-    if (cost <= 20) {
-      return <>One less meal at a cafe!</>;
-    }
-    if (cost <= 30) {
-      return <>One less meal at a restaurant!</>;
-    }
-    if (cost <= 50) {
-      return <>Still cheaper than a video game</>;
-    }
-    if (cost <= 80) {
-      return <>Play a game, or play at Universal Studios?</>;
-    }
-    if (cost <= 100) {
-      return <>Houston, we have a problem</>;
-    }
-  };
+  const levelMessage = roiMeter(cardFunctions(props.allGames, "dmgPerPlay"));
+  
+  let funMeterDisplay = funMeter;
+  funMeterDisplay.sort((a, b) => b.result - a.result);
+
+  const funMeterTable = funMeterDisplay.map((item) => {
+    return (
+      <tr>
+        <td>${item.result}</td>
+        <td>{item.message}</td>
+      </tr>
+    );
+  });
 
   return (
     <div>
@@ -48,48 +28,9 @@ const Homepage = (props) => {
         <p>Fear not!! We will determine if this precious hobby of yours is:</p>
       </div>
       <div className="fun-box">
-        <div className="roi-summary">
-          {roiMeter(props.dmgplay)}
-        </div>
+        <div className="roi-summary">{levelMessage}</div>
         <table>
-          <tr>
-            <td>$100</td>
-            <td>Houston, we have a problem</td>
-          </tr>
-          <tr>
-            <td>$80</td>
-            <td>Play a game, or play at Universal Studios?</td>
-          </tr>
-          <tr>
-            <td>$50</td>
-            <td>Still cheaper than a video game</td>
-          </tr>
-          <tr>
-            <td>$30</td>
-            <td>One less meal at a restaurant!</td>
-          </tr>
-          <tr>
-            <td>$20</td>
-            <td>One less meal at a cafe!</td>
-          </tr>
-          <tr>
-            <td>$15</td>
-            <td>Fine! It's either this or the cinema</td>
-          </tr>
-          <tr>
-            <td>$10</td>
-            <td>
-              Wow, it <b>IS</b> cheaper than going to the cinema!
-            </td>
-          </tr>
-          <tr>
-            <td>$5</td>
-            <td>Skip a cup of joe</td>
-          </tr>
-          <tr>
-            <td>$0</td>
-            <td>!!! IMPOSSIBRU?!? !!!</td>
-          </tr>
+          {funMeterTable}
         </table>
       </div>
     </div>

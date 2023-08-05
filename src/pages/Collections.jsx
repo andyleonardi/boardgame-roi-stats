@@ -1,7 +1,9 @@
 import Header from "../components/Header";
-import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 const Collections = (props) => {
+  const userId = useRef(null);
+
   const allGames = props.allGames.map((e, index) => {
     return (
       <tr key={index}>
@@ -19,6 +21,11 @@ const Collections = (props) => {
     );
   });
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    props.handleSyncButton(userId.current.value);
+  };
+
   return (
     <div>
       <Header />
@@ -26,9 +33,17 @@ const Collections = (props) => {
         <div>
           <h2>Your Collection</h2>
         </div>
-        <button onClick={props.handleSyncButton}>
-          <Link to="/form">Sync Data</Link>
-        </button>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            id="bgg-userid-form"
+            placeholder="your BGG user id"
+            ref={userId}
+          />
+          <button type="submit">
+            Sync Data
+          </button>
+        </form>
         <table>
           <tr>
             <th>Name</th>

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FormDone from "./FormDone";
 
 const Forms = (props) => {
   const [requiredInputs, setRequiredInputs] = useState(props.objArr);
-  const [formCompletionStatus, setFormCompletionStatus] = useState(false);
+  // const [formCompletionStatus, setFormCompletionStatus] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const updateState = () => {
@@ -41,7 +42,8 @@ const Forms = (props) => {
     event.preventDefault();
     console.log(requiredInputs);
     props.updateDataFromInputs(requiredInputs);
-    setFormCompletionStatus(true);
+    // setFormCompletionStatus(true);
+    navigate("/formdone");
   };
 
   const allRequiredInputs = props.objArr.map((e, index) => {
@@ -102,7 +104,7 @@ const Forms = (props) => {
 
   return (
     <div className="form-container">
-      {formCompletionStatus && <FormDone />}
+      {/* {formCompletionStatus && <FormDone />} */}
       <div className="formtable">
         <div>
           <h2>Please input damage & heals here</h2>
