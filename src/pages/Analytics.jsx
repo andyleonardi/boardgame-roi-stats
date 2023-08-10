@@ -1,7 +1,43 @@
 import Header from "../components/Header";
 import cardFunctions from "../functions/cardFunctions";
+import BarChart from "../components/BarChart";
+import LineChart from "../components/LineChart";
+import monthlyInAndOut from "../functions/dataFunctions";
+import { useState } from "react";
+
+import Chart from "chart.js/auto";
+import { CategoryScale } from "chart.js";
+
+Chart.register(CategoryScale);
 
 const Analytics = (props) => {
+  const [barChartData, setBarChartData] = useState({
+    labels: monthlyInAndOut(props.allGames).map((data) => data.monthClean),
+    datasets: [
+      {
+        label: "Buy",
+        data: monthlyInAndOut(props.allGames).map((data) => data.numbuy),
+        backgroundColor: "rgba(0, 0, 255, 1)",
+      },
+      {
+        label: "Sell",
+        data: monthlyInAndOut(props.allGames).map((data) => -1*data.numsell),
+        backgroundColor: "rgba(255, 0, 0, 1)",
+      },
+    ],
+  });
+
+  const [lineChartData, setLineChartData] = useState({
+    labels: monthlyInAndOut(props.allGames).map((data) => data.monthClean),
+    datasets: [
+      {
+        label: "Net Damage",
+        data: monthlyInAndOut(props.allGames).map((data) => data.netDmg),
+        borderColor: "rgba(0, 0, 255, 1)",
+      },
+    ],
+  });
+
   return (
     <div>
       <Header />
@@ -25,7 +61,10 @@ const Analytics = (props) => {
           </div>
         </div>
       </div>
-      <div className="analytics-charts"></div>
+      <div className="analytics-charts">
+        <BarChart dataObj={barChartData}/>
+        <LineChart dataObj={lineChartData}/>
+      </div>
     </div>
   );
 };

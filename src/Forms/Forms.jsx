@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormDone from "./FormDone";
 
 const Forms = (props) => {
   const [requiredInputs, setRequiredInputs] = useState(props.objArr);
-  // const [formCompletionStatus, setFormCompletionStatus] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -42,7 +40,6 @@ const Forms = (props) => {
     event.preventDefault();
     console.log(requiredInputs);
     props.updateDataFromInputs(requiredInputs);
-    // setFormCompletionStatus(true);
     navigate("/formdone");
   };
 
@@ -104,14 +101,12 @@ const Forms = (props) => {
 
   return (
     <div className="form-container">
-      {/* {formCompletionStatus && <FormDone />} */}
       <div className="formtable">
         <div>
           <h2>Please input damage & heals here</h2>
         </div>
         <form onSubmit={handleSubmit}>
           <button type="submit">
-            {/* <Link to="/collections">Submit</Link> */}
             Submit
           </button>
           <table>

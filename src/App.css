@@ -38,13 +38,15 @@
 .roi-summary {
   width: 50%;
   height: 50px;
-  border: 1px solid red;
-  text-align: center;
+  border: 2px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
-.fun-box table {
+/* .fun-box table {
   margin-top: 50px;
-}
+} */
 
 .collections {
   display: flex;
@@ -91,4 +93,17 @@ td {
   width: 20%;
   height: 150px;
   margin: 30px 15px;
+}
+
+.analytics-charts {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.purchase-trend {
+  margin-bottom: 50px;
+  padding: 30px;
+  border: 2px solid gray;
 }

@@ -1,23 +1,11 @@
 import Header from "../components/Header";
 import roiMeter from "../functions/roiFunctions";
 import cardFunctions from "../functions/cardFunctions";
-import funMeter from "../components/funMeter";
+
 
 const Homepage = (props) => {
   const levelMessage = roiMeter(cardFunctions(props.allGames, "dmgPerPlay"));
   
-  let funMeterDisplay = funMeter;
-  funMeterDisplay.sort((a, b) => b.result - a.result);
-
-  const funMeterTable = funMeterDisplay.map((item) => {
-    return (
-      <tr>
-        <td>${item.result}</td>
-        <td>{item.message}</td>
-      </tr>
-    );
-  });
-
   return (
     <div>
       <Header />
@@ -29,9 +17,6 @@ const Homepage = (props) => {
       </div>
       <div className="fun-box">
         <div className="roi-summary">{levelMessage}</div>
-        <table>
-          {funMeterTable}
-        </table>
       </div>
     </div>
   );
