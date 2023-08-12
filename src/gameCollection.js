@@ -252,7 +252,7 @@ const games = [
     playcount: 3,
   },
   {
-    name: "Clank!: Legacy – Acquisitions Incorporated",
+    name: "Clank! Legacy: Acquisitions Incorporated",
     status: "Own",
     buydate: "2019-12-01",
     buyprice: 95.63,
